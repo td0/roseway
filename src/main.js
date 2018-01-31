@@ -12,12 +12,15 @@ import './components/Waves.css'
 
 Vue.config.productionTip = false
 
+let app
 firebase.initializeApp(fbConfig)
-
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+firebase.auth().onAuthStateChanged(user => {
+  if (!app) {
+    app = new Vue({
+      el: '#app',
+      router,
+      components: { App },
+      template: '<App/>'
+    })
+  }
 })
