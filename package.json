@@ -20,6 +20,8 @@
     "classnames": "^2.2.5",
     "font-awesome": "^4.7.0",
     "mdbootstrap": "^4.4.3",
+    "chart.js": "^2.7.1",
+    "vue-chartjs": "^3.0.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
