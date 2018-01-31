@@ -1,25 +1,48 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import firebase from 'firebase'
+import MainPage from '@/pages/Main'
 import LoginPage from '@/pages/Login'
 import NotFound from '@/pages/404'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }, {
-      path: '/login',
-      name: 'Login',
-      component: LoginPage
-    }, {
       path: '*',
       name: 'NotFound',
       component: NotFound
+    }, {
+      path: '/',
+      redirect: '/main'
+    }, {
+      path: '/login',
+      name: 'Login',
+      component: LoginPage,
+      meta: {
+        hasNotLoggedIn: true
+      }
+    }, {
+      path: '/main',
+      name: 'MainPage',
+      component: MainPage,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  let currentUser = firebase.auth().currentUser
+  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  console.log(currentUser)
+
+  if (requiresAuth && !currentUser) next('login')
+  else if (!requiresAuth && currentUser) next('main')
+  else next()
+})
+
+export default router

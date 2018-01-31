@@ -3,7 +3,12 @@ export default {
     wave (e) {
       if (this.waves) {
         this.getOffsets()
-        this.waveData = { 'top': e.pageY - this.offsetTop, 'left': e.pageX - this.offsetLeft, 'height': this.$el.offsetHeight, 'width': this.$el.offsetWidth }
+        this.waveData = {
+          'top': e.pageY - this.offsetTop,
+          'left': e.pageX - this.offsetLeft,
+          'height': this.$el.offsetHeight,
+          'width': this.$el.offsetWidth
+        }
         // for fixed elements
         if (this.wavesFixed) {
           this.waveData.top = e.clientY
