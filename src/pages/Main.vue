@@ -24,25 +24,23 @@
 
         <md-list>
           <md-list-item to="/reports">
-            <md-icon>move_to_inbox</md-icon>
+            <md-icon class="fa fa-list-alt"></md-icon>
             <span class="md-list-item-text">Report</span>
           </md-list-item>
-
           <md-list-item to="/fixed-issues">
-            <md-icon>send</md-icon>
+            <md-icon class="fa fa-wrench"></md-icon>
             <span class="md-list-item-text">Fixed Road Issue</span>
           </md-list-item>
-
           <md-list-item to="/abuse-issues">
-            <md-icon>delete</md-icon>
+            <md-icon class="fa fa-exclamation-triangle"></md-icon>
             <span class="md-list-item-text">Post Abuse Issue</span>
           </md-list-item>
-
           <md-list-item to="/users">
-            <md-icon>error</md-icon>
+            <md-icon class="fa fa-users"></md-icon>
             <span class="md-list-item-text">User Manager</span>
           </md-list-item>
         </md-list>
+
       </md-app-drawer>
 
       <md-app-content>
@@ -99,9 +97,15 @@ export default {
     max-width: calc(100vw - 125px);
   }
   .router-link-active {
-    background-color: #E0E0E0E0;
-    .md-list-item-text {
-      color: rgb(256,165,0);
+    background-color: rgba(0,0,0,.1);
+    // .md-list-item-text {
+    //   color: rgb(256,165,0);
+    // }
+  }
+
+  .fa {
+    svg {
+      fill:red;
     }
   }
 </style>
