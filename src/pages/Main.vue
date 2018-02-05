@@ -1,7 +1,54 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <a @click="logout()">logout</a>
+  <div class="page-container">
+    <md-app>
+      <md-app-toolbar class="md-primary">
+        <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
+          <md-icon>menu</md-icon>
+        </md-button>
+        <span class="md-title">Roseway</span>
+        <div class="md-toolbar-section-end">
+          <md-button @click="logout">Logout</md-button>
+        </div>
+      </md-app-toolbar>
+
+      <md-app-drawer :md-active.sync="menuVisible" md-persistent="mini">
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <span>Navigation</span>
+
+          <div class="md-toolbar-section-end">
+            <md-button class="md-icon-button md-dense" @click="toggleMenu">
+              <md-icon>keyboard_arrow_left</md-icon>
+            </md-button>
+          </div>
+        </md-toolbar>
+
+        <md-list>
+          <md-list-item to="/reports">
+            <md-icon>move_to_inbox</md-icon>
+            <span class="md-list-item-text">Report</span>
+          </md-list-item>
+
+          <md-list-item to="/fixed-issues">
+            <md-icon>send</md-icon>
+            <span class="md-list-item-text">Fixed Road Issue</span>
+          </md-list-item>
+
+          <md-list-item to="/abuse-issues">
+            <md-icon>delete</md-icon>
+            <span class="md-list-item-text">Post Abuse Issue</span>
+          </md-list-item>
+
+          <md-list-item to="/users">
+            <md-icon>error</md-icon>
+            <span class="md-list-item-text">User Manager</span>
+          </md-list-item>
+        </md-list>
+      </md-app-drawer>
+
+      <md-app-content>
+        <router-view></router-view>
+      </md-app-content>
+    </md-app>
   </div>
 </template>
 
@@ -9,42 +56,52 @@
 import firebase from 'firebase'
 
 export default {
-  name: 'HelloWorld',
+  name: 'Main',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      menuVisible: false
     }
   },
   methods: {
+    toggleMenu: function () {
+      this.menuVisible = !this.menuVisible
+    },
     logout: function () {
-      console.log('logging out')
       firebase.auth().signOut().then(
         () => {
-          this.$router.replace('/')
+          console.log('logging out')
+          this.$router.replace('/login')
         },
         err => {
           alert('error : ' + err)
         }
       )
+    },
+    testFunc () {
+      alert('test')
     }
+  },
+  mounted () {
+    this.menuVisible = true
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style lang="scss" scoped>
+  .md-app {
+    min-height: 100vh;
+  }
+  // Demo purposes only
+  .md-drawer {
+    width: 230px;
+    // min-width: 70px;
+    max-width: calc(100vw - 125px);
+  }
+  .router-link-active {
+    background-color: #E0E0E0E0;
+    .md-list-item-text {
+      color: rgb(256,165,0);
+    }
+  }
 </style>

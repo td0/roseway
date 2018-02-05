@@ -1,49 +1,40 @@
 <template>
-  <div id="wrapper" ref="wrapper">
+  <div id="wrapper">
     <div id="login">
-      <card>
-        <card-body>
+
+      <md-card id="card">
+        <md-card-header>
           <center>
-            <h3>Authentication</h3>
+          <div class="md-title">
+            Roseway
+          </div>
+          <div class="md-subhead">
+            Authentication
+          </div>
           </center>
-          <section class='login-form'>
-            <div style="margin-top:3.5rem;max-width:20rem">
-              <mdinput :value="email"
-                @input.native="email = $event.target.value"
-                @keyup.enter.native="authenticate"
-                size="md" type="text" label="Email"/>
-            </div>
-            <div style="margin-top:2rem;max-width:20rem">
-              <mdinput :value="passwd"
-                @input.native="passwd = $event.target.value"
-                @keyup.enter.native="authenticate"
-                size="md" type="password" label="Password"/>
-            </div>
-            <btn @click.native="authenticate"
-              type="submit" color="primary" size="md"
-              class='login-button'>Log In</btn>
-          </section>
-        </card-body>
-      </card>
+        </md-card-header>
+        <md-card-content>
+          <md-field>
+            <label>Email</label>
+            <md-input v-model="email" />
+          </md-field>
+          <md-field>
+            <label>Password</label>
+            <md-input v-model="passwd" type="password" />
+          </md-field>
+          <md-button v-on:click="authenticate" class="md-raised md-accent login-button">Login</md-button>
+        </md-card-content>
+      </md-card>
     </div>
   </div>
 </template>
 
 <script>
 import firebase from 'firebase'
-import MdInput from '@/components/MdInput.vue'
-import card from '@/components/Card'
-import cardBody from '@/components/CardBody'
-import Btn from '@/components/Button.vue'
 
 export default {
   name: 'login',
-  components: {
-    'Card': card,
-    'CardBody': cardBody,
-    'mdinput': MdInput,
-    'btn': Btn
-  },
+  components: {},
   data: function () {
     return {
       email: '',
@@ -54,12 +45,17 @@ export default {
     authenticate: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.passwd).then(
         user => {
-          this.$router.replace('/main')
+          this.$router.replace('/reports')
         },
         err => {
           alert('error: ' + err)
         }
       )
+    }
+  },
+  created () {
+    if (firebase.auth().currentUser) {
+      this.$router.replace('/reports')
     }
   }
 }
@@ -79,13 +75,14 @@ export default {
     position:fixed;
     top: 50%;
     left: 50%;
-    width:20em;
+    width:22em;
     height:20em;
-    margin-left: -10em; /*set to a negative number 1/2 of your width*/
-    margin-top: -15em; /*set to a negative number 1/2 of your height*/
+    margin-left: -11em;
+    margin-top: -15em;
   }
   .login-button {
-    margin-top: 3em;
+    margin-top: 1em;
+    margin-bottom: 2em;
     float: right;
   }
 </style>
