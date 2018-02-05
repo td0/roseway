@@ -14,15 +14,25 @@
           </center>
         </md-card-header>
         <md-card-content>
-          <md-field>
-            <label>Email</label>
-            <md-input v-model="email" />
-          </md-field>
-          <md-field>
-            <label>Password</label>
-            <md-input v-model="passwd" type="password" />
-          </md-field>
-          <md-button v-on:click="authenticate" class="md-raised md-accent login-button">Login</md-button>
+
+          <center v-if="loading">
+            <br/>
+            <md-progress-spinner md-mode="indeterminate" class="md-accent"/>
+          </center>
+
+          <form v-else v-on:submit="authenticate">
+            <md-field>
+              <label>Email</label>
+              <md-input v-model="email" />
+            </md-field>
+            <md-field>
+              <label>Password</label>
+              <md-input v-model="passwd" type="password" />
+            </md-field>
+            <md-button type="submit"
+              class="md-raised md-accent login-button">Login</md-button>
+          </form>
+
         </md-card-content>
       </md-card>
     </div>
@@ -38,17 +48,21 @@ export default {
   data: function () {
     return {
       email: '',
-      passwd: ''
+      passwd: '',
+      loading: false
     }
   },
   methods: {
     authenticate: function () {
+      // console.log('login button pressed')
+      this.loading = true
       firebase.auth().signInWithEmailAndPassword(this.email, this.passwd).then(
         user => {
           this.$router.replace('/reports')
         },
         err => {
-          alert('error: ' + err)
+          this.loading = false
+          alert('error: ' + err.message)
         }
       )
     }
