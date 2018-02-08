@@ -20,7 +20,7 @@
             <md-progress-spinner md-mode="indeterminate" class="md-accent"/>
           </center>
 
-          <form v-else v-on:submit="authenticate">
+          <form v-else v-on:submit.prevent="authenticate">
             <md-field>
               <label>Email</label>
               <md-input v-model="email" />
@@ -54,7 +54,6 @@ export default {
   },
   methods: {
     authenticate: function () {
-      // console.log('login button pressed')
       this.loading = true
       firebase.auth().signInWithEmailAndPassword(this.email, this.passwd).then(
         user => {
