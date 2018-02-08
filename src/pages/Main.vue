@@ -90,22 +90,11 @@ export default {
   .md-app {
     min-height: 100vh;
   }
-  // Demo purposes only
   .md-drawer {
     width: 230px;
-    // min-width: 70px;
     max-width: calc(100vw - 125px);
   }
   .router-link-active {
     background-color: rgba(0,0,0,.1);
-    // .md-list-item-text {
-    //   color: rgb(256,165,0);
-    // }
-  }
-
-  .fa {
-    svg {
-      fill:red;
-    }
   }
 </style>
