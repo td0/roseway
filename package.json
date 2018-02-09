@@ -14,15 +14,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "bootstrap": "4.0.0-beta.2",
-    "bootstrap-vue": "^1.0.2",
-    "chart.js": "^2.7.1",
-    "classnames": "^2.2.5",
     "firebase": "^4.9.0",
-    "font-awesome": "^4.7.0",
-    "mdbootstrap": "^4.4.3",
     "vue": "^2.5.2",
-    "vue-chartjs": "^3.0.2",
     "vue-material": "^1.0.0-beta-7",
     "vue-router": "^3.0.1",
     "vuefire": "^1.4.5"
