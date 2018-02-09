@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <md-app>
+    <md-app md-waterfall md-mode="fixed">
       <md-app-toolbar class="md-primary">
         <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
           <md-icon>menu</md-icon>
@@ -25,15 +25,15 @@
         <md-list>
           <md-list-item to="/reports">
             <md-icon class="fa fa-list-alt"></md-icon>
-            <span class="md-list-item-text">Report</span>
+            <span class="md-list-item-text">Reports</span>
           </md-list-item>
           <md-list-item to="/fixed-issues">
             <md-icon class="fa fa-wrench"></md-icon>
-            <span class="md-list-item-text">Fixed Road Issue</span>
+            <span class="md-list-item-text">Fixed Road Issues</span>
           </md-list-item>
           <md-list-item to="/abuse-issues">
             <md-icon class="fa fa-exclamation-triangle"></md-icon>
-            <span class="md-list-item-text">Post Abuse Issue</span>
+            <span class="md-list-item-text">Abusive Post Issues</span>
           </md-list-item>
           <md-list-item to="/users">
             <md-icon class="fa fa-users"></md-icon>
@@ -43,8 +43,8 @@
 
       </md-app-drawer>
 
-      <md-app-content>
-        <router-view></router-view>
+      <md-app-content >
+        <router-view />
       </md-app-content>
     </md-app>
   </div>
@@ -89,6 +89,7 @@ export default {
 <style lang="scss" scoped>
   .md-app {
     min-height: 100vh;
+    max-height: 400px;
   }
   .md-drawer {
     width: 230px;
@@ -96,5 +97,8 @@ export default {
   }
   .router-link-active {
     background-color: rgba(0,0,0,.1);
+    .md-icon.md-theme-default.md-icon-font{
+      color: orange;
+    }
   }
 </style>
