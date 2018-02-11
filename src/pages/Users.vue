@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
-    <button @click="testPrint" >Test </button>
-    <br> <br>
+    <!-- <button @click="testPrint" >Test </button>
+    <br> <br> -->
 
     <center v-if="loading">
       <br/>
