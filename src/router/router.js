@@ -8,6 +8,7 @@ import ReportsPage from '@/pages/Reports'
 import FixedRoadPage from '@/pages/FixedRoad'
 import AbusePage from '@/pages/Abuse'
 import UsersPage from '@/pages/Users'
+import MapsPage from '@/pages/Maps'
 import NotFound from '@/pages/404'
 import TestPage from '@/pages/Test'
 
@@ -40,6 +41,16 @@ let router = new Router({
           path: 'users',
           name: 'Users',
           component: UsersPage
+        }, {
+          path: 'maps',
+          name: 'Maps',
+          component: MapsPage,
+          children: [
+            {
+              path: 'i/:reportId',
+              component: MapsPage
+            }
+          ]
         }
       ],
       meta: {

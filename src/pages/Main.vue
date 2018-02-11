@@ -27,9 +27,9 @@
             <md-icon class="fa fa-list-alt nav-reports"></md-icon>
             <span class="md-list-item-text">Reports</span>
           </md-list-item>
-          <md-list-item to="/users">
-            <md-icon class="fa fa-users nav-users"></md-icon>
-            <span class="md-list-item-text">User Manager</span>
+          <md-list-item to="/maps">
+            <md-icon class="fa fa-map nav-maps"></md-icon>
+            <span class="md-list-item-text">Maps</span>
           </md-list-item>
           <md-list-item to="/fixed-issues">
             <md-icon class="fa fa-wrench nav-fixed"></md-icon>
@@ -38,6 +38,10 @@
           <md-list-item to="/abuse-issues">
             <md-icon class="fa fa-exclamation-triangle nav-abuse"></md-icon>
             <span class="md-list-item-text">Abusive Post Issues</span>
+          </md-list-item>
+          <md-list-item to="/users">
+            <md-icon class="fa fa-users nav-users"></md-icon>
+            <span class="md-list-item-text">User Manager</span>
           </md-list-item>
         </md-list>
 
@@ -100,14 +104,17 @@ export default {
     i.md-icon.md-theme-default.md-icon-font.nav-reports{
       color: #2777FF;
     }
+    i.md-icon.md-theme-default.md-icon-font.nav-maps{
+      color: #7A54DE
+    }
+    i.md-icon.md-theme-default.md-icon-font.nav-users{
+      color: #EAA910;
+    }
     i.md-icon.md-theme-default.md-icon-font.nav-fixed{
       color: #27BA77;
     }
     i.md-icon.md-theme-default.md-icon-font.nav-abuse{
       color: #FF6237;
-    }
-    i.md-icon.md-theme-default.md-icon-font.nav-users{
-      color: #EAA910;
     }
   }
 </style>

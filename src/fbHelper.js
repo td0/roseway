@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import fbConfig from '../keystore'
+import {fbConfig} from '../keystore'
 
 const app = firebase.initializeApp(fbConfig)
 
