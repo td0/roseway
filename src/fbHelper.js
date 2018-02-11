@@ -5,6 +5,7 @@ const app = firebase.initializeApp(fbConfig)
 
 export const db = app.database()
 export const fixedIssueRef = db.ref('ReportFixedIssues')
+export const abusivePostRef = db.ref('ReportAbuseIssues')
 export const reportsRef = db.ref('Reports')
 
 let userList
