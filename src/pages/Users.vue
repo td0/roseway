@@ -1,35 +1,53 @@
 <template>
   <div id="wrapper">
-    <!-- <button @click="testPrint" >Test </button>
-    <br> <br> -->
 
     <center v-if="loading">
       <br/>
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="usersList" md-sort="joinDate" md-sort-order="desc" md-fixed-header>
+    <md-table v-else v-model="searched" md-sort="joinDate" md-sort-order="desc" md-fixed-header>
       <md-table-toolbar>
-        <h1 class="md-title">Users</h1>
+        <div class="md-toolbar-section-start">
+          <h1 class="md-title">Users</h1>
+        </div>
+        <md-field md-clearable class="md-toolbar-section-end">
+          <md-input placeholder="Search User..." v-model="search" @input="searchOnTable" />
+        </md-field>
       </md-table-toolbar>
-      <md-table-row slot="md-table-row" slot-scope="{ item }">
-        <md-table-cell md-label="Join Date" md-sort-by="joinDate">{{item.joinDate}}</md-table-cell>
-        <md-table-cell md-label="Name" md-sort-by="name"><b>{{item.name}}</b></md-table-cell>
-        <md-table-cell md-label="Phone Number">{{item.phoneNumber}}</md-table-cell>
-        <md-table-cell md-label="Report Count" md-sort-by="reportCount" md-numeric>{{item.reportCount}}</md-table-cell>
-        <md-table-cell md-label="Status">{{(item.status)}}</md-table-cell>
+      <md-table-empty-state
+        md-label="No data found"
+        :md-description="`No user found for '${this.search}' query. Try a different search term.`">
+      </md-table-empty-state>
+      <md-table-row slot="md-table-row" slot-scope="{ item }" @click="testPrint">
+        <md-table-cell md-label="Join Date" md-sort-by="joinDate">
+          {{item.joinDate}}
+        </md-table-cell>
+        <md-table-cell md-label="Name" md-sort-by="name">
+          <b>{{item.name}}</b>
+        </md-table-cell>
+        <md-table-cell md-label="Phone Number">
+          {{item.phoneNumber}}
+        </md-table-cell>
+        <md-table-cell md-label="Report Count" md-sort-by="reportCount" md-numeric>
+          {{item.reportCount}}
+        </md-table-cell>
+        <md-table-cell md-label="Status" md-sort-by="status">
+          {{item.status}}
+        </md-table-cell>
         <md-table-cell md-label="Action">
-          <md-button v-if="item.status!=='active'" class="md-icon-button btn-green">
-            <md-icon>check_circle</md-icon>
-            <md-tooltip md-direction="top">Unblock This User</md-tooltip>
+          <md-button v-if="item.status==='active'" class="md-icon-button btn-green">
+            <md-icon>lock_open</md-icon>
+            <md-tooltip md-direction="top">Block This User</md-tooltip>
           </md-button>
           <md-button v-else class="md-icon-button btn-red">
-            <md-icon>block</md-icon>
-            <md-tooltip md-direction="top">Block This User</md-tooltip>
+            <md-icon>lock_outline</md-icon>
+            <md-tooltip md-direction="top">Unblock This User</md-tooltip>
           </md-button>
         </md-table-cell>
       </md-table-row>
     </md-table>
+
   </div>
 </template>
 
@@ -45,12 +63,21 @@ export default {
     },
     getDate: function (epoch) {
       return moment(epoch).format('YYYY-MM-DD')
+    },
+    searchOnTable: function () {
+      let skey = this.search.toLowerCase()
+      this.searched = this.usersList
+        .filter(obj => Object.keys(obj).some(key => {
+          if (typeof obj[key] !== 'string' && key !== 'name' &&
+            key !== 'phoneNumber') return false
+          else return obj[key].toLowerCase().includes(skey)
+        }))
     }
   },
   data () {
     return {
       loading: true,
-      search: null,
+      search: '',
       searched: [],
       usersList: []
     }
@@ -68,6 +95,7 @@ export default {
         tmpObj.status = snapItem.status === 1 ? 'active' : 'blocked'
         this.usersList.push(tmpObj)
       }
+      this.searched = this.usersList
       this.loading = false
     })
   },

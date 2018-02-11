@@ -10,7 +10,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="searched" md-sort="date" md-sort-order="desc" md-fixed-header>
+    <md-table v-else v-model="searched" md-sort="date" md-sort-order="asc" md-fixed-header>
       <md-table-toolbar>
         <!-- <button @click="testPrint" >Test </button>
         <br> <br> -->
@@ -18,7 +18,7 @@
           <h1 class="md-title">Reports</h1>
         </div>
         <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
+          <md-input placeholder="Search..." v-model="search" @input="searchOnTable" />
         </md-field>
       </md-table-toolbar>
       <md-table-empty-state
@@ -36,7 +36,8 @@
           <img :src="item.imageUrl" height="40" width="40" @click="imagePreview(item.imageUrl)"/>
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
-          <md-icon class="location">location_on</md-icon><u>{{item.streetName}}</u>
+          <md-icon class="location">location_on</md-icon>
+          <u>{{item.streetName}}</u>
         </md-table-cell>
         <md-table-cell md-label="Upvote" md-sort-by="upvoteCount">
           {{item.upvoteCount}}
@@ -105,6 +106,7 @@ export default {
         tmpObj.upvoteCount = snapItem.upvoteCount
         this.reportsList.push(tmpObj)
       }
+      this.reportsList = this.reportsList.reverse()
       this.searched = this.reportsList
       this.loading = false
     })

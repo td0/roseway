@@ -107,7 +107,7 @@ export default {
       color: #FF6237;
     }
     i.md-icon.md-theme-default.md-icon-font.nav-users{
-      color: #9575FF;
+      color: #EAA910;
     }
   }
 </style>
