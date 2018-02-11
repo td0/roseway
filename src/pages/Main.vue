@@ -5,7 +5,7 @@
         <md-button class="md-icon-button" @click="toggleMenu" v-if="!menuVisible">
           <md-icon>menu</md-icon>
         </md-button>
-        <span class="md-title">Roseway</span>
+        <span class="md-title">Markgo Admin</span>
         <div class="md-toolbar-section-end">
           <md-button @click="logout">Logout</md-button>
         </div>

@@ -6,7 +6,7 @@
         <md-card-header>
           <center>
           <div class="md-title">
-            Roseway
+            Markgo Admin
           </div>
           <div class="md-subhead">
             Authentication
