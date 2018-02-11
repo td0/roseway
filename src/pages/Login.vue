@@ -30,7 +30,7 @@
               <md-input v-model="passwd" type="password" />
             </md-field>
             <md-button type="submit"
-              class="md-raised md-accent login-button">Login</md-button>
+              class="md-raised md-primary login-button">Login</md-button>
           </form>
 
         </md-card-content>

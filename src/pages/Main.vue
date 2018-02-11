@@ -98,16 +98,16 @@ export default {
   a.router-link-active {
     background-color: rgba(0,0,0,.1);
     i.md-icon.md-theme-default.md-icon-font.nav-reports{
-      color: #5757FF;
+      color: #2777FF;
     }
     i.md-icon.md-theme-default.md-icon-font.nav-fixed{
-      color: #27AA57;
+      color: #27BA77;
     }
     i.md-icon.md-theme-default.md-icon-font.nav-abuse{
       color: #FF6237;
     }
     i.md-icon.md-theme-default.md-icon-font.nav-users{
-      color: #A545D0;
+      color: #9575FF;
     }
   }
 </style>

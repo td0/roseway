@@ -12,7 +12,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="fixedReports" md-sort="streetName" md-sort-order="asc">
+    <md-table v-else v-model="fixedReports" md-sort="streetName" md-sort-order="asc" md-fixed-header>
       <md-table-toolbar>
         <h1 class="md-title">Fixed Road Issues</h1>
       </md-table-toolbar>
@@ -25,7 +25,7 @@
         <md-table-cell md-label="Reporter" md-sort-by="reporterName"><b>{{item.reporterName}}</b></md-table-cell>
         <md-table-cell md-label="Issuer">
           <ul>
-            <li v-for="(issuer, idx) in item.issuers" :key="idx">> <b>{{issuer}}</b></li>
+            <li v-for="(issuer, idx) in item.issuers" :key="idx"><u><b>{{issuer}}</b></u></li>
           </ul>
         </md-table-cell>
         <md-table-cell md-label="Action">
@@ -104,7 +104,7 @@ ul {
   }
 }
 .btn-green .md-icon.md-theme-default.md-icon-font{
-  color: green;
+  color: #27BA77;
 }
 .btn-orange .md-icon.md-theme-default.md-icon-font{
   color: orange;

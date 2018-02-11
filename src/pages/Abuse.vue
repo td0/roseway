@@ -12,7 +12,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="abusiveReports" md-sort="streetName" md-sort-order="asc">
+    <md-table v-else v-model="abusiveReports" md-sort="streetName" md-sort-order="asc" md-fixed-header>
       <md-table-toolbar>
         <h1 class="md-title">Abusive Post</h1>
       </md-table-toolbar>
@@ -26,7 +26,7 @@
         <md-table-cell md-label="Issuer">
           <ul>
             <li v-for="(issuer, idx) in item.issuers" :key="idx">
-              > <b>{{issuer}}</b><br/>
+              <u><b>{{issuer}}</b></u><br/>
               <i v-if="item.reasoning[idx]!=''">"{{item.reasoning[idx]}}"</i>
             </li>
           </ul>
