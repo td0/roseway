@@ -67,7 +67,7 @@ export default {
     }
   },
   mounted: function () {
-    fixedIssueRef.once('value').then(snap1 => {
+    fixedIssueRef.on('value', snap1 => {
       this.fixedReports = []
       for (let key in snap1.val()) {
         reportsRef.child(key).once('value').then(snap2 => {
