@@ -21,20 +21,22 @@
         <md-table-cell md-label="Photo">
           <img :src="item.imageUrl" height="40" width="40" @click="imagePreview(item.imageUrl)"/>
         </md-table-cell>
-        <md-table-cell md-label="Street" md-sort-by="streetName">{{ item.streetName }}</md-table-cell>
-        <md-table-cell md-label="Reporter" md-sort-by="reporterName">{{ item.reporterName }}</md-table-cell>
+        <md-table-cell md-label="Street" md-sort-by="streetName">{{item.streetName}}</md-table-cell>
+        <md-table-cell md-label="Reporter" md-sort-by="reporterName"><b>{{item.reporterName}}</b></md-table-cell>
         <md-table-cell md-label="Issuer">
           <ul>
-            <li v-for="(issuer, idx) in item.issuers" :key="idx">{{issuer}}</li>
+            <li v-for="(issuer, idx) in item.issuers" :key="idx">> <b>{{issuer}}</b></li>
           </ul>
         </md-table-cell>
         <md-table-cell md-label="Action">
           <md-button class="md-icon-button btn-green">
             <md-icon>done</md-icon>
+            <md-tooltip md-direction="top">Change Status to Fixed</md-tooltip>
           </md-button>
 
-          <md-button class="md-icon-button btn-red">
+          <md-button class="md-icon-button btn-orange">
             <md-icon>clear</md-icon>
+            <md-tooltip md-direction="top">Remove This Issue</md-tooltip>
           </md-button>
         </md-table-cell>
       </md-table-row>
@@ -104,7 +106,7 @@ ul {
 .btn-green .md-icon.md-theme-default.md-icon-font{
   color: green;
 }
-.btn-red .md-icon.md-theme-default.md-icon-font{
-  color: red;
+.btn-orange .md-icon.md-theme-default.md-icon-font{
+  color: orange;
 }
 </style>
