@@ -9,7 +9,7 @@
 
     <center v-if="loading">
       <br/>
-      <md-progress-spinner md-mode="indeterminate" class="md-accent"/>
+      <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
     <md-table v-else v-model="fixedReports" md-sort="streetName" md-sort-order="asc">
