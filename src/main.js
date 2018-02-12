@@ -18,9 +18,9 @@ Vue.use(VueFire)
 Vue.use(VueMaterial)
 Vue.use(VueGMaps, {
   load: {
-    key: mapsKey,
-    v: '3.exp',
-    use_slippy: true
+    key: mapsKey
+    // v: '3.exp',
+    // use_slippy: true
   }
 })
 
