@@ -6,9 +6,10 @@
     </h1>
     <gmap-map :center="center"
       :zoom="zoom"
+      :options="{minZoom: 12, scrollwheel: true}"
       map-type-id="roadmap"
       class="markgoMap" >
-      <gmap-cluster :grid-size="30">
+      <gmap-cluster :grid-size="50">
         <gmap-info-window :opened="ifwOpen"
           :position="ifwPosition"
           :options="ifwOptions"
