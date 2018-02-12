@@ -32,7 +32,7 @@
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
           <md-icon class="location">location_on</md-icon>
-          <u>{{item.streetName}}</u>
+          <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
         </md-table-cell>
         <md-table-cell md-label="Issuer">
           <ul>
@@ -99,6 +99,7 @@ export default {
           delete tmpObj.date
           delete tmpObj.fixed
           delete tmpObj.description
+          tmpObj.key = key
           tmpObj.issuers = {}
           for (let userKey in snap1.val()[key]) {
             tmpObj.issuers[userKey] = userList[userKey].name

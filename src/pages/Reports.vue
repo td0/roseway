@@ -37,7 +37,7 @@
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
           <md-icon class="location">location_on</md-icon>
-          <u>{{item.streetName}}</u>
+          <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
         </md-table-cell>
         <md-table-cell md-label="Upvote" md-sort-by="upvoteCount">
           {{item.upvoteCount}}
@@ -95,6 +95,7 @@ export default {
       for (let key in snap.val()) {
         let snapItem = snap.val()[key]
         let tmpObj = {}
+        tmpObj.key = key
         tmpObj.coord = snapItem.coordinate
         tmpObj.date = this.getDate(snapItem.date.reportTime)
         tmpObj.desc = snapItem.description

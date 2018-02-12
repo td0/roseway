@@ -32,7 +32,7 @@
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
           <md-icon class="location">location_on</md-icon>
-          <u>{{item.streetName}}</u>
+          <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
         </md-table-cell>
         <md-table-cell md-label="Issuer">
           <ul>
@@ -97,6 +97,7 @@ export default {
       for (let key in snap1.val()) {
         reportsRef.child(key).once('value').then(snap2 => {
           let tmpObj = snap2.val()
+          tmpObj.key = key
           tmpObj.issuers = {}
           tmpObj.reasoning = {}
           for (let userKey in snap1.val()[key]) {
