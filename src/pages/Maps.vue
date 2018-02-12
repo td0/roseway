@@ -2,7 +2,6 @@
   <div id="wrapper">
     <h1>
       Maps
-      <button @click="testPrint">test</button>
     </h1>
     <gmap-map :center="center"
       :zoom="zoom"
