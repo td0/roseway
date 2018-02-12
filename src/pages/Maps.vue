@@ -12,15 +12,22 @@
         <gmap-info-window :opened="ifwOpen"
           :position="ifwPosition"
           :options="ifwOptions"
-          @closeclick="infoWinOpen=false">
-          <img :src="ifwImg" height="100" width="100" />
-          {{ifwText}}
+          @closeclick="ifwOpen=false">
+          <div class="iw-wrapper">
+            <div class="iw-img">
+              <img :src="ifwImg" class='iw-img-preview' />
+            </div>
+            <div class="iw-text">
+              <h4>{{ifwTitle}}</h4>
+              <span>{{ifwText}}</span>
+            </div>
+          </div>
         </gmap-info-window>
-        <gmap-marker v-for="(m, i) in markers"
+        <gmap-marker v-for="m in markers"
           :position="m.position"
           :draggable="m.draggable"
           @position_changed="updateChild(m, 'position', $event)"
-          @click="toggleIfw(m, i)"
+          @click="toggleIfw(m)"
           :key="m.id">
         </gmap-marker>
       </gmap-cluster>
@@ -37,13 +44,15 @@ export default {
     testPrint: function () {
       console.log(this.markers)
     },
-    toggleIfw: function (marker, idx) {
+    toggleIfw: function (marker) {
+      this.ifwImg = '../assets/img/100x100.png'
       this.ifwPosition = marker.position
       this.ifwText = marker.desc
-      if (this.currentIfw === idx) this.ifwOpen = false
+      this.ifwTitle = marker.name
+      if (this.currentIfw === marker.id) this.ifwOpen = !this.ifwOpen
       else {
         this.ifwOpen = true
-        this.currentIfw = idx
+        this.currentIfw = marker.id
         this.ifwImg = marker.imgUrl
       }
     },
@@ -52,11 +61,8 @@ export default {
         .find(key => key === 'id' && obj[key] === this.query))[0]
       if (this.queriedMarker !== undefined) {
         this.center = this.queriedMarker.position
-        this.zoom = 15
-        this.ifwPosition = this.queriedMarker.position
-        this.ifwImg = this.queriedMarker.imgUrl
-        this.ifwText = this.queriedMarker.desc
-        this.ifwOpen = true
+        this.zoom = 17
+        this.toggleIfw(this.queriedMarker)
       } else console.log('can\'t find report with ID of : ' + this.query)
     }
   },
@@ -67,7 +73,8 @@ export default {
       markers: [],
       currentIfw: null,
       ifwOpen: false,
-      ifwImg: 'https://placeholdit.co//i/100x100?bg=000000&fc=FFFFFF&text=Loading...',
+      ifwImg: '../assets/img/100x100.png',
+      ifwTitle: '',
       ifwText: '',
       ifwPosition: {lat: 0, lng: 0},
       ifwOptions: {
@@ -81,7 +88,7 @@ export default {
     }
   },
   created () {
-    this.query = this.$route.params.reportId
+    if (this.$route.params.reportId) this.query = this.$route.params.reportId
   },
   mounted: function () {
     reportsRef.on('value', snap => {
@@ -90,6 +97,7 @@ export default {
         let snapItem = snap.val()[key]
         let tmpObj = {}
         tmpObj.id = key
+        tmpObj.name = snapItem.reporterName
         tmpObj.position = {
           lat: snapItem.coordinate.latitude,
           lng: snapItem.coordinate.longitude
@@ -115,5 +123,32 @@ export default {
 .markgoMap {
   height: calc(100vh - 160px);
   width: 100%;
+}
+.iw-wrapper {
+  max-height:100px;
+  .iw-img {
+    display: table;
+    height:100%;
+    max-width: 80px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    float: left;
+    .iw-img-preview{
+      display: table-cell;
+      vertical-align: middle;
+      height: 80px;
+      width: 80px;
+    }
+  }
+  .iw-text {
+    float: right;
+    max-width: 150px;
+    margin-left: 20px;
+    margin-bottom: 2px;
+    h4{
+      margin-top:2px;
+      margin-bottom:5px;
+    }
+  }
 }
 </style>
