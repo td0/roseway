@@ -3,6 +3,7 @@ node_modules/
 docs/
 ignoredAssets/
 /dist/
+/functions/
 *-debug.log*
 
 # Editor directories and files
