@@ -10,6 +10,7 @@ export const abusivePostRef = db.ref('ReportAbuseIssues')
 export const reportsRef = db.ref('Reports')
 export const userReportsRef = db.ref('UserReports')
 export const usersRef = db.ref('Users')
+export const storageRef = firebase.storage().ref('Roseway/')
 
 let userList
 usersRef.once('value').then(snap => {
