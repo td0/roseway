@@ -70,6 +70,10 @@
       </md-table-row>
     </md-table>
 
+    <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="showSnackbar" md-persistent>
+      <span>Issue cleared</span>
+      <md-button class="md-accent" @click="showSnackbar = false">close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -128,7 +132,7 @@ export default {
       })
       this.cDialog.show = false
       fixedIssueRef.child(issued.id).remove().then(snap => {
-        console.log('cleared')
+        this.showSnackbar = true
       })
       this.cDialog.show = false
     }
@@ -144,6 +148,7 @@ export default {
     return {
       cDialog,
       showDialog: false,
+      showSnackbar: false,
       loading: true,
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
       search: '',
