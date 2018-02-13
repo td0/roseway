@@ -1,6 +1,15 @@
 <template>
   <div id="wrapper">
 
+    <md-dialog-confirm
+      :md-active.sync="confirmDialog"
+      :md-title="blockDialogTitle"
+      :md-content="blockDialogText"
+      md-confirm-text="Yes"
+      md-cancel-text="No"
+      @md-cancel="confirmDialog = false"
+      @md-confirm="confirmBlock" />
+
     <center v-if="loading">
       <br/>
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
@@ -36,11 +45,15 @@
           {{item.status}}
         </md-table-cell>
         <md-table-cell md-label="Action">
-          <md-button v-if="item.status==='active'" class="md-icon-button btn-green">
+          <md-button v-if="item.status==='active'"
+            class="md-icon-button btn-green"
+            @click="blockUserPressed(true, item.id)">
             <md-icon>lock_open</md-icon>
             <md-tooltip md-direction="top">Block This User</md-tooltip>
           </md-button>
-          <md-button v-else class="md-icon-button btn-red">
+          <md-button v-else
+            class="md-icon-button btn-red"
+            @click="blockUserPressed(false, item.id)">
             <md-icon>lock_outline</md-icon>
             <md-tooltip md-direction="top">Unblock This User</md-tooltip>
           </md-button>
@@ -72,11 +85,33 @@ export default {
             key !== 'phoneNumber') return false
           else return obj[key].toLowerCase().includes(skey)
         }))
+    },
+    blockUserPressed: function (isBlock, uid) {
+      this.blockDialogTitle = isBlock ? 'Block User' : 'Unblock User'
+      this.blockDialogText = isBlock ? 'Do you really want to block this user?'
+        : 'Do you really want to unblock this user?'
+      this.blockUid = uid
+      this.blockMode = isBlock
+      this.confirmDialog = true
+    },
+    confirmBlock: function () {
+      let status = this.blockMode ? 0 : 1
+      usersRef.child(this.blockUid).child('status').set(status).then(snap => {
+        console.log('' + this.blockUid + (this.blockMode ? ' blocked' : ' unblocked'))
+      }).catch(err => {
+        console.error(err)
+      })
+      this.confirmDialog = false
     }
   },
   data () {
     return {
       loading: true,
+      confirmDialog: false,
+      blockMode: true,
+      blockDialogTitle: 'Block User',
+      blockDialogText: 'Do you really want to block this user?',
+      blockUid: '',
       search: '',
       searched: [],
       usersList: []
@@ -88,6 +123,7 @@ export default {
       for (let key in snap.val()) {
         let tmpObj = {}
         let snapItem = snap.val()[key]
+        tmpObj.id = key
         tmpObj.name = snapItem.name
         tmpObj.phoneNumber = snapItem.phoneNumber
         tmpObj.joinDate = this.getDate(snapItem.joinDate.timestamp)
