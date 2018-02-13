@@ -28,7 +28,12 @@
           <b>{{item.reporterName}}</b>
         </md-table-cell>
         <md-table-cell md-label="Photo">
-          <img :src="item.imageUrl" height="40" width="40" @click="imagePreview(item.imageUrl)"/>
+          <div class="img-thumb">
+            <div class="crop">
+              <img :src="item.imageUrl"
+              @click="imagePreview(item.imageUrl)"/>
+            </div>
+          </div>
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
           <md-icon class="location">location_on</md-icon>
@@ -148,5 +153,35 @@ ul {
 .location.md-icon {
   color: #FF4747 !important;
   font-size: 18px !important;
+}
+td.md-table-cell {
+  .location.md-icon {
+    color: #FF4747 !important;
+    font-size: 15px !important;
+    margin-right: -7px;
+  }
+  .img-thumb{
+    background: #fff;
+    display: inline-block;
+    vertical-align: top;
+    width: 45px;
+    height: 45px;
+    .crop{
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      img {
+        display: block;
+        min-width: 100%;
+        min-height: 100%;
+        margin: auto;
+        position: absolute;
+        top: -100%;
+        right: -100%;
+        bottom: -100%;
+        left: -100%;
+      }
+    }
+  }
 }
 </style>

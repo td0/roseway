@@ -160,8 +160,8 @@ td.md-table-cell {
     background: #fff;
     display: inline-block;
     vertical-align: top;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     .crop{
       height: 100%;
       overflow: hidden;

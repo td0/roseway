@@ -1,6 +1,15 @@
 <template>
   <div id="wrapper">
 
+    <md-dialog-confirm
+      :md-active.sync="cDialog.show"
+      :md-title="cDialog.title"
+      :md-content="cDialog.text"
+      md-confirm-text="Yes"
+      md-cancel-text="No"
+      @md-cancel="cDialog.show = false"
+      @md-confirm="dialogConfirmed" />
+
     <md-dialog :md-active.sync="showDialog" class="image-preview">
       <img v-bind:src="imagePreviewUrl" >
     </md-dialog>
@@ -28,11 +37,16 @@
           <b>{{item.reporterName}}</b>
         </md-table-cell>
         <md-table-cell md-label="Photo">
-          <img :src="item.imageUrl" height="40" width="40" @click="imagePreview(item.imageUrl)"/>
+          <div class="img-thumb">
+            <div class="crop">
+              <img :src="item.imageUrl"
+              @click="imagePreview(item.imageUrl)"/>
+            </div>
+          </div>
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName">
           <md-icon class="location">location_on</md-icon>
-          <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
+          <router-link :to="'/maps/i/'+item.id"><u>{{item.streetName}}</u></router-link>
         </md-table-cell>
         <md-table-cell md-label="Issuer">
           <ul>
@@ -43,11 +57,11 @@
           </ul>
         </md-table-cell>
         <md-table-cell md-label="Action">
-          <md-button class="md-icon-button btn-green">
+          <md-button class="md-icon-button btn-green" @click="fixIssueBtn(item.id)">
             <md-icon>done</md-icon>
-            <md-tooltip md-direction="top">Change Status to Fixed</md-tooltip>
+            <md-tooltip md-direction="top">Confirm Fixed Road</md-tooltip>
           </md-button>
-          <md-button class="md-icon-button btn-orange">
+          <md-button class="md-icon-button btn-orange" @click="clearIssueBtn(item.id)">
             <md-icon>clear</md-icon>
             <md-tooltip md-direction="top">Remove This Issue</md-tooltip>
           </md-button>
@@ -78,10 +92,35 @@ export default {
           if (key !== 'reporterName' && key !== 'streetName') return false
           else return obj[key].toLowerCase().includes(skey)
         }))
+    },
+    fixIssueBtn: function (uid) {
+      this.cDialog.title = 'Confirm Fixed Road'
+      this.cDialog.text = 'Change the status to fixed?'
+      this.cDialog.show = true
+      console.log(uid)
+    },
+    clearIssueBtn: function (uid) {
+      this.cDialog.title = 'Clear Issue'
+      this.cDialog.text = 'Clear the issued fixed road?'
+      this.cDialog.show = true
+      console.log(uid)
+    },
+    dialogConfirmed: function () {
+      console.log('dialog confirmed')
+      this.cDialog.show = false
+    },
+    clearIssue: function () {
+      console.log('cleared')
     }
   },
   data () {
+    let cDialog = {
+      show: false,
+      title: '',
+      text: ''
+    }
     return {
+      cDialog,
       showDialog: false,
       loading: true,
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
@@ -99,7 +138,7 @@ export default {
           delete tmpObj.date
           delete tmpObj.fixed
           delete tmpObj.description
-          tmpObj.key = key
+          tmpObj.id = key
           tmpObj.issuers = {}
           for (let userKey in snap1.val()[key]) {
             tmpObj.issuers[userKey] = userList[userKey].name
@@ -145,5 +184,35 @@ ul {
 .location.md-icon {
   color: #FF4747 !important;
   font-size: 18px !important;
+}
+td.md-table-cell {
+  .location.md-icon {
+    color: #FF4747 !important;
+    font-size: 15px !important;
+    margin-right: -7px;
+  }
+  .img-thumb{
+    background: #fff;
+    display: inline-block;
+    vertical-align: top;
+    width: 45px;
+    height: 45px;
+    .crop{
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      img {
+        display: block;
+        min-width: 100%;
+        min-height: 100%;
+        margin: auto;
+        position: absolute;
+        top: -100%;
+        right: -100%;
+        bottom: -100%;
+        left: -100%;
+      }
+    }
+  }
 }
 </style>
