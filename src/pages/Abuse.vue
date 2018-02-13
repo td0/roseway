@@ -195,7 +195,7 @@ export default {
   max-width: 300px;
 }
 .md-content.md-table-content.md-scrollbar.md-theme-default {
-  height: calc(100vh - 220px) !important;
+  height: calc(100vh - 200px) !important;
 }
 ul {
   list-style-type: none;

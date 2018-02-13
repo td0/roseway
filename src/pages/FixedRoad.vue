@@ -21,7 +21,6 @@
 
     <md-table v-else v-model="searched" md-sort="streetName" md-sort-order="asc">
       <md-table-toolbar>
-
         <div class="md-toolbar-section-start">
           <h1 class="md-title">Fixed Road Issues</h1>
         </div>
@@ -190,7 +189,7 @@ export default {
   max-width: 300px;
 }
 .md-content.md-table-content.md-scrollbar.md-theme-default {
-  height: calc(100vh - 220px) !important;
+  height: calc(100vh - 200px) !important;
 }
 ul {
   list-style-type: none;

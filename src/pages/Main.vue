@@ -24,23 +24,23 @@
 
         <md-list>
           <md-list-item to="/reports">
-            <md-icon class="fa fa-list-alt nav-reports"></md-icon>
+            <md-icon class="nav-reports">view_list</md-icon>
             <span class="md-list-item-text">Reports</span>
           </md-list-item>
           <md-list-item to="/maps">
-            <md-icon class="fa fa-map nav-maps"></md-icon>
+            <md-icon class="nav-maps">map</md-icon>
             <span class="md-list-item-text">Maps</span>
           </md-list-item>
           <md-list-item to="/fixed-issues">
-            <md-icon class="fa fa-wrench nav-fixed"></md-icon>
+            <md-icon class="nav-fixed">build</md-icon>
             <span class="md-list-item-text">Fixed Road Issues</span>
           </md-list-item>
           <md-list-item to="/abuse-issues">
-            <md-icon class="fa fa-exclamation-triangle nav-abuse"></md-icon>
+            <md-icon class="nav-abuse">report</md-icon>
             <span class="md-list-item-text">Abusive Post Issues</span>
           </md-list-item>
           <md-list-item to="/users">
-            <md-icon class="fa fa-users nav-users"></md-icon>
+            <md-icon class="nav-users">people</md-icon>
             <span class="md-list-item-text">User Manager</span>
           </md-list-item>
         </md-list>

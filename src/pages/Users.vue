@@ -15,7 +15,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="searched" md-sort="joinDate" md-sort-order="desc" md-fixed-header>
+    <md-table v-else v-model="searched" md-sort="joinDate" md-sort-order="desc">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h1 class="md-title">Users</h1>
@@ -143,6 +143,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.md-content.md-table-content.md-scrollbar.md-theme-default {
+  height: calc(100vh - 200px) !important;
+}
 .btn-green .md-icon.md-theme-default.md-icon-font{
   color: green;
 }

@@ -87,6 +87,7 @@ export default {
   data () {
     return {
       loading: true,
+      toggleCard: false,
       showDialog: false,
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
       search: '',
@@ -129,7 +130,7 @@ export default {
   max-width: 300px;
 }
 .md-content.md-table-content.md-scrollbar.md-theme-default {
-  height: calc(100vh - 220px) !important;
+  height: calc(100vh - 200px) !important;
 }
 .text-green {
   color: #27BA77;
