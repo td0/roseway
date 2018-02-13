@@ -21,6 +21,8 @@
 
     <md-table v-else v-model="searched" md-sort="streetName" md-sort-order="asc" md-fixed-header>
       <md-table-toolbar>
+        <button @click="testPrint" >Test </button>
+        <br> <br>
         <div class="md-toolbar-section-start">
           <h1 class="md-title">Fixed Road Issues</h1>
         </div>
@@ -57,11 +59,11 @@
           </ul>
         </md-table-cell>
         <md-table-cell md-label="Action">
-          <md-button class="md-icon-button btn-green" @click="fixIssueBtn(item.id)">
+          <md-button class="md-icon-button btn-green" @click="actionBtn(true, item.idx)">
             <md-icon>done</md-icon>
             <md-tooltip md-direction="top">Confirm Fixed Road</md-tooltip>
           </md-button>
-          <md-button class="md-icon-button btn-orange" @click="clearIssueBtn(item.id)">
+          <md-button class="md-icon-button btn-orange" @click="actionBtn(false, item.idx)">
             <md-icon>clear</md-icon>
             <md-tooltip md-direction="top">Remove This Issue</md-tooltip>
           </md-button>
@@ -73,13 +75,14 @@
 </template>
 
 <script>
-import {fixedIssueRef, reportsRef, userList} from '../fbHelper'
+import {fixedIssueRef, userFixIssueRef,
+  reportsRef, userReportsRef, userList} from '../fbHelper'
 
 export default {
   name: 'FixedRoad',
   methods: {
     testPrint: function () {
-      console.log(this.fixedReports)
+      console.log(this.fixedIssues)
     },
     imagePreview: function (imgUrl) {
       this.imagePreviewUrl = imgUrl
@@ -87,37 +90,63 @@ export default {
     },
     searchOnTable: function () {
       let skey = this.search.toLowerCase()
-      this.searched = this.fixedReports
+      this.searched = this.fixedIssues
         .filter(obj => Object.keys(obj).some(key => {
           if (key !== 'reporterName' && key !== 'streetName') return false
           else return obj[key].toLowerCase().includes(skey)
         }))
     },
-    fixIssueBtn: function (uid) {
-      this.cDialog.title = 'Confirm Fixed Road'
-      this.cDialog.text = 'Change the status to fixed?'
-      this.cDialog.show = true
-      console.log(uid)
-    },
-    clearIssueBtn: function (uid) {
-      this.cDialog.title = 'Clear Issue'
-      this.cDialog.text = 'Clear the issued fixed road?'
-      this.cDialog.show = true
-      console.log(uid)
+    actionBtn: function (fixMode, idx) {
+      if (fixMode) {
+        this.cDialog.title = 'Confirm Fixed Road'
+        this.cDialog.text = 'Change the status to fixed?'
+        this.cDialog.idx = idx
+        this.cDialog.fixMode = true
+        this.cDialog.show = true
+      } else {
+        this.cDialog.title = 'Clear Issue'
+        this.cDialog.text = 'Clear the issued fixed road?'
+        this.cDialog.idx = idx
+        this.cDialog.fixMode = false
+        this.cDialog.show = true
+      }
+      console.log(idx)
     },
     dialogConfirmed: function () {
-      console.log('dialog confirmed')
-      this.cDialog.show = false
+      const issued = this.fixedIssues[this.cDialog.idx]
+      if (this.cDialog.fixMode) {
+        this.confirmFix(issued)
+      } else {
+        this.clearIssue(issued)
+      }
     },
-    clearIssue: function () {
-      console.log('cleared')
+    confirmFix: function (issued) {
+      reportsRef.child(issued.id).child('fixed').set(true).then(snap =>
+        userReportsRef.child(issued.reporterId).child(issued.id).child('fixed').set(true)
+      ).then(snap => {
+        console.log('fixed')
+        this.clearIssue(issued)
+      })
+    },
+    clearIssue: function (issued) {
+      let issuers = Object.keys(issued.issuers)
+      issuers.forEach(id => {
+        userFixIssueRef.child(id).child(issued.id).remove()
+      })
+      this.cDialog.show = false
+      fixedIssueRef.child(issued.id).remove().then(snap => {
+        console.log('cleared')
+      })
+      this.cDialog.show = false
     }
   },
   data () {
     let cDialog = {
       show: false,
       title: '',
-      text: ''
+      text: '',
+      fixMode: true,
+      idx: ''
     }
     return {
       cDialog,
@@ -126,12 +155,13 @@ export default {
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
       search: '',
       searched: [],
-      fixedReports: []
+      fixedIssues: []
     }
   },
   mounted: function () {
     fixedIssueRef.on('value', snap1 => {
-      this.fixedReports = []
+      this.fixedIssues = []
+      let idx = 0
       for (let key in snap1.val()) {
         reportsRef.child(key).once('value').then(snap2 => {
           let tmpObj = snap2.val()
@@ -139,14 +169,15 @@ export default {
           delete tmpObj.fixed
           delete tmpObj.description
           tmpObj.id = key
+          tmpObj.idx = idx++
           tmpObj.issuers = {}
           for (let userKey in snap1.val()[key]) {
             tmpObj.issuers[userKey] = userList[userKey].name
           }
-          this.fixedReports.push(tmpObj)
+          this.fixedIssues.push(tmpObj)
         })
       }
-      this.searched = this.fixedReports
+      this.searched = this.fixedIssues
       this.loading = false
     })
   },
