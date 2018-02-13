@@ -99,17 +99,14 @@ export default {
       if (fixMode) {
         this.cDialog.title = 'Confirm Fixed Road'
         this.cDialog.text = 'Change the status to fixed?'
-        this.cDialog.idx = idx
         this.cDialog.fixMode = true
-        this.cDialog.show = true
       } else {
         this.cDialog.title = 'Clear Issue'
         this.cDialog.text = 'Clear the issued fixed road?'
-        this.cDialog.idx = idx
         this.cDialog.fixMode = false
-        this.cDialog.show = true
       }
-      console.log(idx)
+      this.cDialog.idx = idx
+      this.cDialog.show = true
     },
     dialogConfirmed: function () {
       const issued = this.fixedIssues[this.cDialog.idx]
