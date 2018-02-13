@@ -19,7 +19,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="searched" md-sort="streetName" md-sort-order="asc" md-fixed-header>
+    <md-table v-else v-model="searched" md-sort="streetName" md-sort-order="asc">
       <md-table-toolbar>
 
         <div class="md-toolbar-section-start">
