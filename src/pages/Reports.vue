@@ -10,7 +10,7 @@
       <md-progress-spinner md-mode="indeterminate" class="md-primary"/>
     </center>
 
-    <md-table v-else v-model="searched" md-sort="date" md-sort-order="asc" md-fixed-header>
+    <md-table v-else v-model="searched" md-sort="date" md-sort-order="asc">
       <md-table-toolbar>
         <!-- <button @click="testPrint" >Test </button>
         <br> <br> -->
@@ -33,11 +33,17 @@
           <b>{{item.reporterName}}</b>
         </md-table-cell>
         <md-table-cell md-label="Photo">
-          <img :src="item.imageUrl" height="40" width="40" @click="imagePreview(item.imageUrl)"/>
+          <div class="img-thumb">
+            <div class="crop">
+              <img :src="item.imageUrl"
+              @click="imagePreview(item.imageUrl)"/>
+            </div>
+          </div>
         </md-table-cell>
-        <md-table-cell md-label="Street" md-sort-by="streetName">
+        <md-table-cell md-label="Street" md-sort-by="streetName" class="col-description">
           <md-icon class="location">location_on</md-icon>
           <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
+          <div v-if="item.desc!==''" class="description-text"><i>"{{item.desc}}"</i></div>
         </md-table-cell>
         <md-table-cell md-label="Upvote" md-sort-by="upvoteCount">
           {{item.upvoteCount}}
@@ -69,7 +75,7 @@ export default {
       let skey = this.search.toLowerCase()
       this.searched = this.reportsList
         .filter(obj => Object.keys(obj).some(key => {
-          if (key === 'imageUrl' || key === 'reporterId' ||
+          if (key === 'imageUrl' || key === 'reporterId' || key === 'desc' ||
             key === 'upvoteCount' || key === 'coord') return false
           else return obj[key].toLowerCase().includes(skey)
         }))
@@ -104,7 +110,7 @@ export default {
         tmpObj.reporterId = snapItem.reporterId
         tmpObj.reporterName = snapItem.reporterName
         tmpObj.streetName = snapItem.streetName
-        tmpObj.upvoteCount = snapItem.upvoteCount
+        tmpObj.upvoteCount = snapItem.upvoteCount.toString()
         this.reportsList.push(tmpObj)
       }
       this.reportsList = this.reportsList.reverse()
@@ -125,14 +131,53 @@ export default {
 .md-content.md-table-content.md-scrollbar.md-theme-default {
   height: calc(100vh - 220px) !important;
 }
-.text-green{
+.text-green {
   color: #27BA77;
 }
-.text-orange{
+.text-orange {
   color: orangered;
 }
-.location.md-icon {
-  color: #FF4747 !important;
-  font-size: 18px !important;
+.image-preview {
+  max-width: 400px;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+td.md-table-cell.col-description {
+  max-width: 300px;
+  .description-text {
+    margin-left: 18px;
+  }
+}
+td.md-table-cell {
+  .location.md-icon {
+    color: #FF4747 !important;
+    font-size: 15px !important;
+    margin-right: -7px;
+  }
+  .img-thumb{
+    background: #fff;
+    display: inline-block;
+    vertical-align: top;
+    width: 40px;
+    height: 40px;
+    .crop{
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      img {
+        display: block;
+        min-width: 100%;
+        min-height: 100%;
+        margin: auto;
+        position: absolute;
+        top: -100%;
+        right: -100%;
+        bottom: -100%;
+        left: -100%;
+      }
+    }
+  }
 }
 </style>
