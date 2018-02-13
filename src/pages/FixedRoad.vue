@@ -21,8 +21,7 @@
 
     <md-table v-else v-model="searched" md-sort="streetName" md-sort-order="asc" md-fixed-header>
       <md-table-toolbar>
-        <button @click="testPrint" >Test </button>
-        <br> <br>
+
         <div class="md-toolbar-section-start">
           <h1 class="md-title">Fixed Road Issues</h1>
         </div>
@@ -76,7 +75,7 @@
 
 <script>
 import {fixedIssueRef, userFixIssueRef,
-  reportsRef, userReportsRef, userList} from '../fbHelper'
+  reportsRef, userList} from '../fbHelper'
 
 export default {
   name: 'FixedRoad',
@@ -121,10 +120,7 @@ export default {
       }
     },
     confirmFix: function (issued) {
-      reportsRef.child(issued.id).child('fixed').set(true).then(snap =>
-        userReportsRef.child(issued.reporterId).child(issued.id).child('fixed').set(true)
-      ).then(snap => {
-        console.log('fixed')
+      reportsRef.child(issued.id).child('fixed').set(true).then(snap => {
         this.clearIssue(issued)
       })
     },
@@ -165,7 +161,6 @@ export default {
       for (let key in snap1.val()) {
         reportsRef.child(key).once('value').then(snap2 => {
           let tmpObj = snap2.val()
-          delete tmpObj.date
           delete tmpObj.fixed
           delete tmpObj.description
           tmpObj.id = key
