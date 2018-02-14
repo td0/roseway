@@ -56,13 +56,13 @@
             </li>
           </ul>
         </md-table-cell>
-        <md-table-cell md-label="Action" class="action-cell">
+        <md-table-cell class="action-cell">
           <md-button class="md-icon-button btn-red" @click="actionBtn(true,item.idx)">
-            <md-icon>delete</md-icon>
+            <md-icon>delete_forever</md-icon>
             <md-tooltip md-direction="top">Delete This Report</md-tooltip>
           </md-button>
           <md-button class="md-icon-button btn-orange" @click="actionBtn(false, item.idx)">
-            <md-icon>clear</md-icon>
+            <md-icon>remove_circle_outline</md-icon>
             <md-tooltip md-direction="top">Remove This Issue</md-tooltip>
           </md-button>
         </md-table-cell>

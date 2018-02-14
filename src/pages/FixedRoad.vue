@@ -56,13 +56,13 @@
             </li>
           </ul>
         </md-table-cell>
-        <md-table-cell md-label="Action">
+        <md-table-cell>
           <md-button class="md-icon-button btn-green" @click="actionBtn(true, item.idx)">
             <md-icon>done</md-icon>
             <md-tooltip md-direction="top">Confirm Fixed Road</md-tooltip>
           </md-button>
           <md-button class="md-icon-button btn-orange" @click="actionBtn(false, item.idx)">
-            <md-icon>clear</md-icon>
+            <md-icon>remove_circle_outline</md-icon>
             <md-tooltip md-direction="top">Remove This Issue</md-tooltip>
           </md-button>
         </md-table-cell>
