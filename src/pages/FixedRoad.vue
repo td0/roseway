@@ -70,7 +70,7 @@
     </md-table>
 
     <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="showSnackbar" md-persistent>
-      <span>Issue cleared</span>
+      <span>{{snackBarText}}</span>
       <md-button class="md-accent" @click="showSnackbar = false">close</md-button>
     </md-snackbar>
   </div>
@@ -121,8 +121,10 @@ export default {
     },
     confirmFix: function (issued) {
       reportsRef.child(issued.id).child('fixed').set(true).then(snap => {
-        this.clearIssue(issued)
+        this.snackBarText = 'Report status : Fixed'
+        this.showSnackbar = true
       })
+      this.cDialog.show = false
     },
     clearIssue: function (issued) {
       let issuers = Object.keys(issued.issuers)
@@ -131,6 +133,7 @@ export default {
       })
       this.cDialog.show = false
       fixedIssueRef.child(issued.id).remove().then(snap => {
+        this.snackBarText = 'Issue removed'
         this.showSnackbar = true
       })
       this.cDialog.show = false
@@ -148,6 +151,7 @@ export default {
       cDialog,
       showDialog: false,
       showSnackbar: false,
+      snackBarText: '',
       loading: true,
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
       search: '',
