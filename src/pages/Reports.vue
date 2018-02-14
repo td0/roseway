@@ -1,6 +1,15 @@
 <template>
   <div id="wrapper">
 
+    <md-dialog-confirm
+      :md-active.sync="cDialog.show"
+      :md-title="cDialog.title"
+      :md-content="cDialog.text"
+      md-confirm-text="Yes"
+      md-cancel-text="No"
+      @md-cancel="cDialog.show = false"
+      @md-confirm="dialogConfirmed" />
+
     <md-dialog :md-active.sync="showDialog" class="image-preview">
       <img v-bind:src="imagePreviewUrl" >
     </md-dialog>
@@ -42,24 +51,43 @@
         </md-table-cell>
         <md-table-cell md-label="Street" md-sort-by="streetName" class="col-description">
           <md-icon class="location">location_on</md-icon>
-          <router-link :to="'/maps/i/'+item.key"><u>{{item.streetName}}</u></router-link>
+          <router-link :to="'/maps/i/'+item.id"><u>{{item.streetName}}</u></router-link>
           <div v-if="item.desc!==''" class="description-text"><i>"{{item.desc}}"</i></div>
         </md-table-cell>
         <md-table-cell md-label="Upvote" md-sort-by="upvoteCount">
           {{item.upvoteCount}}
         </md-table-cell>
         <md-table-cell md-label="Fixed" md-sort-by="fixed">
-          <span v-if="item.fixed === 'no'" class="text-orange">No</span>
+          <span v-if="item.fixed !== 'fixed'" class="text-orange">No</span>
           <span v-else class="text-green">Fixed</span>
+        </md-table-cell>
+        <md-table-cell>
+          <md-button class="md-icon-button btn-green" v-if="item.fixed!=='fixed'" @click="actionBtn('fix',item.idx)">
+            <md-icon>done</md-icon>
+            <md-tooltip md-direction="top">Change status to Fixed</md-tooltip>
+          </md-button>
+          <md-button class="md-icon-button btn-orange" v-else @click="actionBtn('unfix',item.idx)">
+            <md-icon>clear</md-icon>
+            <md-tooltip md-direction="top">Change status to Not Fixed</md-tooltip>
+          </md-button>
+          <md-button class="md-icon-button btn-red" @click="actionBtn('del',item.idx)">
+            <md-icon>delete_forever</md-icon>
+            <md-tooltip md-direction="top">Delete This Report</md-tooltip>
+          </md-button>
         </md-table-cell>
       </md-table-row>
     </md-table>
+
+    <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="showSnackbar" md-persistent>
+      <span>{{snackbarText}}</span>
+      <md-button class="md-accent" @click="showSnackbar = false">close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
-import {reportsRef} from '../fbHelper'
+import {reportsRef, userReportsRef, storageRef} from '../fbHelper'
 
 export default {
   name: 'Reports',
@@ -75,20 +103,74 @@ export default {
       let skey = this.search.toLowerCase()
       this.searched = this.reportsList
         .filter(obj => Object.keys(obj).some(key => {
-          if (key === 'imageUrl' || key === 'reporterId' || key === 'desc' ||
-            key === 'upvoteCount' || key === 'coord') return false
+          if (key !== 'date' && key !== 'reporterName' &&
+            key !== 'streetName' && key !== 'fixed') return false
           else return obj[key].toLowerCase().includes(skey)
         }))
     },
     getDate: function (epoch) {
       return moment(epoch).format('YYYY-MM-DD')
+    },
+    actionBtn: function (mode, idx) {
+      if (mode === 'fix') {
+        this.cDialog.title = 'Confirm Fix'
+        this.cDialog.text = 'Do you want to change the status to fixed?'
+      } else if (mode === 'unfix') {
+        this.cDialog.title = 'Cancel Fix'
+        this.cDialog.text = 'Do you want to remove fixed status?'
+      } else {
+        this.cDialog.title = 'Confirm Delete'
+        this.cDialog.text = 'Do you really want to delete this report?'
+      }
+      this.cDialog.mode = mode
+      this.cDialog.idx = idx
+      this.cDialog.show = true
+    },
+    dialogConfirmed: function () {
+      const report = this.reportsList[this.cDialog.idx]
+      if (this.cDialog.mode === 'fix') {
+        this.fixReport(report, true)
+      } else if (this.cDialog.mode === 'unfix') {
+        this.fixReport(report, false)
+      } else {
+        this.deleteReport(report)
+      }
+      this.cDialog.show = false
+    },
+    fixReport: function (report, fixMode) {
+      reportsRef.child(`${report.id}/fixed`).set(fixMode).then(snap => {
+        if (fixMode) this.snackbarText = 'Report status : Fixed'
+        else this.snackbarText = 'Report status : Not Fixed'
+        this.showSnackbar = true
+      })
+    },
+    deleteReport: function (report) {
+      storageRef.child(`${report.reporterId}/${report.id}.jpg`).delete().then(() => {
+        return userReportsRef.child(`${report.reporterId}/${report.id}`).remove()
+      }).then(() => {
+        return reportsRef.child(report.id).remove()
+      }).then(() => {
+        this.snackbarText = 'Report deleted'
+        this.showSnackbar = true
+      }).catch(err => {
+        alert(err)
+      })
     }
   },
   data () {
+    let cDialog = {
+      show: false,
+      title: '',
+      text: '',
+      mode: '', // fix, unfix, del
+      idx: ''
+    }
     return {
+      cDialog,
       loading: true,
-      toggleCard: false,
       showDialog: false,
+      showSnackbar: false,
+      snackbarText: '',
       imagePreviewUrl: 'https://www.wonderplugin.com/videos/demo-image0.jpg',
       search: '',
       searched: [],
@@ -96,17 +178,19 @@ export default {
     }
   },
   mounted: function () {
-    reportsRef.on('value', snap => {
+    reportsRef.orderByKey().on('value', snap => {
       this.reportsList = []
       this.searched = []
+      let idx = Object.keys(snap.val()).length - 1
       for (let key in snap.val()) {
         let snapItem = snap.val()[key]
         let tmpObj = {}
-        tmpObj.key = key
+        tmpObj.id = key
+        tmpObj.idx = idx--
         tmpObj.coord = snapItem.coordinate
         tmpObj.date = this.getDate(snapItem.date.reportTime)
         tmpObj.desc = snapItem.description
-        tmpObj.fixed = snapItem.fixed ? 'fixed' : 'no'
+        tmpObj.fixed = snapItem.fixed ? 'fixed' : 'broken'
         tmpObj.imageUrl = snapItem.imageUrl
         tmpObj.reporterId = snapItem.reporterId
         tmpObj.reporterName = snapItem.reporterName
@@ -136,7 +220,7 @@ export default {
   color: #27BA77;
 }
 .text-orange {
-  color: orangered;
+  color: orange;
 }
 .image-preview {
   max-width: 400px;
@@ -145,8 +229,22 @@ export default {
     height: auto;
   }
 }
+.btn-green .md-icon.md-theme-default.md-icon-font{
+  color: #27BA77;
+}
+.btn-orange .md-icon.md-theme-default.md-icon-font{
+  color: orange;
+}
+.btn-red .md-icon.md-theme-default.md-icon-font{
+  color: #FF4747;
+}
+.md-button.md-icon-button.md-theme-default {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+}
 td.md-table-cell.col-description {
-  max-width: 300px;
+  max-width: 250px;
   .description-text {
     margin-left: 18px;
   }
