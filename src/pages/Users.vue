@@ -60,7 +60,10 @@
         </md-table-cell>
       </md-table-row>
     </md-table>
-
+    <md-snackbar md-position="center" :md-duration="2000" :md-active.sync="showSnackbar" md-persistent>
+      <span>{{snackbarText}}</span>
+      <md-button class="md-accent" @click="showSnackbar = false">close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -97,9 +100,11 @@ export default {
     confirmBlock: function () {
       let status = this.blockMode ? 0 : 1
       usersRef.child(this.blockUid).child('status').set(status).then(snap => {
-        console.log('' + this.blockUid + (this.blockMode ? ' blocked' : ' unblocked'))
+        if (!status) this.snackbarText = 'User Blocked'
+        else this.snackbarText = 'User Unblocked'
+        this.showSnackbar = true
       }).catch(err => {
-        console.error(err)
+        alert(err)
       })
       this.confirmDialog = false
     }
@@ -108,6 +113,8 @@ export default {
     return {
       loading: true,
       confirmDialog: false,
+      showSnackbar: false,
+      snackbarText: '',
       blockMode: true,
       blockDialogTitle: 'Block User',
       blockDialogText: 'Do you really want to block this user?',
